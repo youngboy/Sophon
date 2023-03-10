@@ -28,6 +28,7 @@
     "jotai-trpc": "^0.5.0",
     "next": "13.2.3",
     "open-props": "^1.5.5",
+    "openai": "^3.2.1",
     "react": "18.2.0",
     "react-chartjs-2": "^5.2.0",
     "react-dom": "18.2.0",

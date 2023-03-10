@@ -70,7 +70,7 @@ export const activeTabAtom = atom(
 export const addTabAtom = atom(null, (get, set, update: string) => {
   const tabs = get(tabAtom)
   const newTab = createTab(update)
-  const newUpdate = {
+  const newUpdate: TabModel = {
     ...newTab,
     title: `标签 ${tabs.length + 1}`
   }
@@ -94,7 +94,7 @@ export const replyTabAtom = atom(null, (get, set, update: string) => {
   }
 
   // optimistic update
-  const newTab = {
+  const newTab: TabModel = {
     ...activeTab,
     messages: [
       ...activeTab.messages,

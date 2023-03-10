@@ -2,7 +2,11 @@ export type MessageMode = {
   id: string
   status?: string
   type: string
-  props: any
+  props: {
+    children?: any
+    data?: any
+    raw?: string
+  }
 }
 export type TabModel = {
   title: string
@@ -18,6 +22,7 @@ export function createTab(quest: string): TabModel {
     status: 'loading',
     messages: [
       createMessage('bot', {
+        raw: quest,
         children: `
       <span class="flex-shrink-0">你似乎想知道</span>
       <span class="font-semibold text-red-400">
@@ -29,10 +34,10 @@ export function createTab(quest: string): TabModel {
   }
 }
 
-export function createMessage(type: string, props: any) {
+export function createMessage(type: string, props: any, status = 'loading') {
   return {
     id: `${Date.now()}`,
-    status: 'loading',
+    status,
     type,
     props
   }
@@ -47,6 +52,7 @@ export const testTab = {
       id: '1',
       type: 'bot',
       props: {
+        raw: '过去一个星期的咨询会话里面，哪些是客服可以改进的',
         children: `
           <span class="flex-shrink-0">你似乎想知道</span>
           <span class="font-semibold text-red-400">
@@ -58,7 +64,9 @@ export const testTab = {
     {
       id: '2',
       type: 'data',
-      props: {}
+      props: {
+        raw: '[data]'
+      }
     },
     {
       id: '3',
