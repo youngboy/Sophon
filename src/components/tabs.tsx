@@ -2,8 +2,8 @@
 
 import * as RTabs from '@radix-ui/react-tabs'
 import { useAtom, useAtomValue } from 'jotai'
-import { useHydrateAtoms } from 'jotai/utils'
 import { useEffect } from 'react'
+import { scrollToTabs } from '~/utils'
 
 import Reply from './reply'
 import { tabWithNodesAtom, activeTabAtom } from './stores/tab'
@@ -12,20 +12,26 @@ export default function Tabs() {
   const tabs = useAtomValue(tabWithNodesAtom)
   const [activeTab, setTab] = useAtom(activeTabAtom)
   useEffect(() => {
-    setTab(tabs[0].title)
+    setTab(tabs[0].id)
   }, [])
 
   if (tabs.length < 1) {
     return null
   }
   return (
-    <RTabs.Root className="TabsRoot" value={activeTab} onValueChange={setTab}>
+    <RTabs.Root
+      className="TabsRoot"
+      value={activeTab?.title}
+      onValueChange={(value) => {
+        setTab(value)
+        scrollToTabs()
+      }}>
       <RTabs.List className="border-b flex flex-nowrap items-center" aria-label="Manage your list">
         {tabs.map((t) => (
           <RTabs.Trigger
-            key={t.title}
+            key={t.id}
             className={`py-2 px-3 rounded-t-md border border-b-0 flex items-center ${
-              activeTab === t.title ? ' bg-surface-2 border-surface-3' : 'border-transparent'
+              activeTab?.title === t.title ? ' bg-surface-2 border-surface-3' : 'border-transparent'
             }`}
             value={t.title}>
             {t.title}

@@ -42,7 +42,9 @@ const hotQuestions = [
 
 export default function Home() {
   return (
-    <main className="scroll-smooth lg:max-w-[900px] min-h-[157vh] mx-auto relative flex w-full flex-col items-stretch px-4">
+    <main
+      id="main-wrapper"
+      className="scroll-smooth lg:max-w-[900px] min-h-[157vh] mx-auto relative flex w-full flex-col items-stretch px-4">
       <div className="h-14 flex items-center">
         <ThemeSwitch className="ml-auto" />
       </div>
@@ -100,7 +102,7 @@ export default function Home() {
           </div>
         </div>
       </div>
-      <div id="tab-wrapper">
+      <div id="tab-wrapper" className="pt-3">
         <Tabs />
       </div>
     </main>

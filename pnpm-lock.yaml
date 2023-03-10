@@ -19,6 +19,7 @@ specifiers:
   eslint: 8.35.0
   eslint-config-next: 13.2.3
   jotai: ^2.0.3
+  jotai-trpc: ^0.5.0
   next: 13.2.3
   open-props: ^1.5.5
   postcss: ^8.4.21
@@ -48,6 +49,7 @@ dependencies:
   eslint: 8.35.0
   eslint-config-next: 13.2.3_ycpbpc6yetojsgtrx3mwntkhsu
   jotai: 2.0.3_react@18.2.0
+  jotai-trpc: 0.5.0_gzw33irceiioeffxcahrvhgzqy
   next: 13.2.3_biqbaboplfbrettd7655fr4n2y
   open-props: 1.5.5
   react: 18.2.0
@@ -2158,6 +2160,18 @@ packages:
 
   /isexe/2.0.0:
     resolution: {integrity: sha512-RHxMLp9lnKHGHRng9QFhRCMbYAcVpn69smSGcq3f36xjgVVWThj4qqLbTLlq7Ssj8B+fIQ1EuCEGI2lKsyQeIw==}
+    dev: false
+
+  /jotai-trpc/0.5.0_gzw33irceiioeffxcahrvhgzqy:
+    resolution: {integrity: sha512-v+tb2zk33/pHmveZwH9wfnVw0IxrGdw/XfQr+0Van8h0P3o1hxU8FkLGyDr0UUtJIRCNMmJZH8hI/MivjbVh+A==}
+    peerDependencies:
+      '@trpc/client': '>=10.0.0'
+      '@trpc/server': '>=10.0.0'
+      jotai: '>=1.11.0'
+    dependencies:
+      '@trpc/client': 10.14.1_@trpc+server@10.14.1
+      '@trpc/server': 10.14.1
+      jotai: 2.0.3_react@18.2.0
     dev: false
 
   /jotai/2.0.3_react@18.2.0:

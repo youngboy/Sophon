@@ -3,6 +3,9 @@ import * as Select from '@radix-ui/react-select'
 import Input from './input'
 import clsx from 'clsx'
 import Icon from './Icon'
+import { useSetAtom } from 'jotai'
+import { closeCurrentTabAtom, replyTabAtom } from './stores/tab'
+import { blurInput } from '~/utils'
 
 type ReplyProps = {}
 
@@ -29,11 +32,18 @@ const SelectItem = React.forwardRef(
 SelectItem.displayName = 'SelectItem'
 
 const Reply: FunctionComponent<ReplyProps> = (props) => {
+  const [msg, setMsg] = useState('')
   const [rate, setState] = useState('')
+  const reply = useSetAtom(replyTabAtom)
+  const closeCurrentTab = useSetAtom(closeCurrentTabAtom)
   return (
     <div className="mt-12 flex justify-between gap-3">
       {rate ? (
-        <button className="py-2 px-3 rounded-md whitespace-pre border border-red-500 flex items-center text-red-500">
+        <button
+          onClick={() => {
+            closeCurrentTab(true)
+          }}
+          className="py-2 px-3 rounded-md whitespace-pre border border-red-500 flex items-center text-red-500">
           关闭标签
         </button>
       ) : (
@@ -65,6 +75,13 @@ const Reply: FunctionComponent<ReplyProps> = (props) => {
         style={{ height: '24px' }}
         placeholder="键入您的回复..."
         iconClassName="w-5 h-5"
+        value={msg}
+        onValueChange={setMsg}
+        onSubmit={() => {
+          reply(msg)
+          setMsg('')
+          blurInput()
+        }}
       />
     </div>
   )
