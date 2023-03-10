@@ -20,6 +20,7 @@ export const completionOpt = {
 export const callComp = async (msgHis: string) => {
   const promptMsg = getPrompt(msgHis)
   console.log('>>> prompt', promptMsg)
+  return '我没钱了，充点钱吧大哥'
   try {
     const resp = await openai.createCompletion({
       ...completionOpt,
