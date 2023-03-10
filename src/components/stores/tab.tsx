@@ -64,6 +64,7 @@ export const activeTabAtom = atom(
     set(activeTabAtomId, update)
   }
 )
+export const loadingAtom = atom(false)
 
 // I know! horrible hum ? without benefit from react-query & atomic at all
 // FIXME: let's fix later, time is rushing
@@ -78,10 +79,15 @@ export const addTabAtom = atom(null, (get, set, update: string) => {
   // optimistic update
   set(tabAtom, [...tabs, newUpdate])
   set(activeTabAtomId, newUpdate.id)
+  set(loadingAtom, true)
 
-  set(postTabAtom, [newUpdate]).then((resp) => {
-    replaceTabs(resp, get, set)
-  })
+  set(postTabAtom, [newUpdate])
+    .then((resp) => {
+      replaceTabs(resp, get, set)
+    })
+    .finally(() => {
+      set(loadingAtom, false)
+    })
 })
 
 const sendMsgAtom = jTrpc.tab.sendMsg.atomWithMutation()
@@ -104,10 +110,15 @@ export const replyTabAtom = atom(null, (get, set, update: string) => {
     ]
   }
   replaceTabs(newTab, get, set)
+  set(loadingAtom, true)
 
-  set(sendMsgAtom, [newTab]).then((resp) => {
-    replaceTabs(resp, get, set)
-  })
+  set(sendMsgAtom, [newTab])
+    .then((resp) => {
+      replaceTabs(resp, get, set)
+    })
+    .finally(() => {
+      set(loadingAtom, false)
+    })
 })
 
 export const closeCurrentTabAtom = atom(null, (get, set, update: boolean) => {

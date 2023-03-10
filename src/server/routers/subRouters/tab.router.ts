@@ -25,46 +25,35 @@ ${lastDirect === 'A' ? 'Q' : 'A'}:`
 const zTab = z.object({
   id: z.string(),
   title: z.string(),
-  status: z.string(),
   messages: z.array(z.any())
 })
 
 export const tabRouter = router({
   post: procedure.input(zTab).mutation(async ({ input }) => {
-    // await sleep(1200)
+    await sleep(1200)
 
     const msg = await callComp(getHisChats(input))
 
-    input.status = 'finish'
     return {
       ...input,
-      status: 'finish',
       messages: [
         ...input.messages,
-        createMessage(
-          'bot',
-          {
-            children: msg
-          },
-          'finish'
-        )
+        createMessage('bot', {
+          children: msg
+        })
       ]
     }
   }),
   sendMsg: procedure.input(zTab).mutation(async ({ input }) => {
+    await sleep(1200)
     const msg = await callComp(getHisChats(input))
     return {
       ...input,
-      status: 'finish',
       messages: [
         ...input.messages,
-        createMessage(
-          'bot',
-          {
-            children: msg
-          },
-          'finish'
-        )
+        createMessage('bot', {
+          children: msg
+        })
       ]
     }
   })

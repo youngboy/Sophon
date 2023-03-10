@@ -1,8 +1,10 @@
 'use client'
 
 import clsx from 'clsx'
+import { useAtom } from 'jotai'
 import { FunctionComponent, useEffect, useState } from 'react'
 import Icon from './Icon'
+import { loadingAtom } from './stores/tab'
 
 type InputProps = {
   placeholder: string
@@ -17,6 +19,7 @@ type InputProps = {
 const Input: FunctionComponent<InputProps> = (props) => {
   const [enterVisible, setEnterVisible] = useState(false)
   const [composing, setCompose] = useState(false)
+  const [loading] = useAtom(loadingAtom)
   useEffect(() => {
     setEnterVisible((props.value?.length || -1) > 0)
   }, [props.value])
@@ -28,7 +31,13 @@ const Input: FunctionComponent<InputProps> = (props) => {
       )}>
       <textarea
         name="prompt"
-        className="m-0 pr-7 bg-transparent cursor-text block h-auto w-full min-w-0 resize-none overflow-hidden bg-none p-0 text-current outline-none"
+        className={clsx(
+          'm-0 pr-7 bg-transparent cursor-text block h-auto w-full min-w-0 resize-none overflow-hidden bg-none p-0 text-current outline-none',
+          {
+            'cursor-progress': loading
+          }
+        )}
+        disabled={loading}
         placeholder={props.placeholder}
         style={props.style}
         value={props.value}

@@ -1,6 +1,5 @@
 export type MessageMode = {
   id: string
-  status?: string
   type: string
   props: {
     children?: any
@@ -11,7 +10,6 @@ export type MessageMode = {
 export type TabModel = {
   title: string
   id: string
-  status: string
   messages: MessageMode[]
 }
 
@@ -19,7 +17,6 @@ export function createTab(quest: string): TabModel {
   return {
     title: `标签`,
     id: `${Date.now()}`,
-    status: 'loading',
     messages: [
       createMessage('bot', {
         raw: quest,
@@ -34,10 +31,9 @@ export function createTab(quest: string): TabModel {
   }
 }
 
-export function createMessage(type: string, props: any, status = 'loading') {
+export function createMessage(type: string, props: any) {
   return {
     id: `${Date.now()}`,
-    status,
     type,
     props
   }
@@ -46,7 +42,6 @@ export function createMessage(type: string, props: any, status = 'loading') {
 export const testTab = {
   title: '标签 1',
   id: `${Date.now()}`,
-  status: 'finish',
   messages: [
     {
       id: '1',

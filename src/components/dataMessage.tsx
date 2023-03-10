@@ -47,6 +47,7 @@ const data = {
     }
   ]
 }
+console.log(data)
 
 const headers = ['name', 'stars']
 const tableData = labels.map((label, labelIndex) => [label, data.datasets[0].data[labelIndex]])
