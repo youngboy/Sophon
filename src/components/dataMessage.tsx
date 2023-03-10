@@ -24,39 +24,34 @@ const options = {
   indexAxis: 'y' as const,
   color: 'rgba(206, 212, 218)',
   borderColor: 'rgba(248, 113, 113, 0.3)',
-  backgroundColor: 'rgb(248, 113, 113)',
-  plugins: {
-    legend: {
-      position: 'top' as const
-    },
-    title: {
-      display: true,
-      text: 'Chart.js Bar Chart'
-    }
+  backgroundColor: 'rgb(248, 113, 113)'
+}
+
+type DataMessageProps = {
+  plot: {
+    metric: string
+    data: number[]
+    labels: string[]
   }
 }
 
-const labels = ['January', 'February', 'March', 'April', 'May', 'June', 'July']
-
-const data = {
-  labels,
-  datasets: [
-    {
-      label: 'Stars',
-      data: labels.map(() => 100)
-    }
-  ]
-}
-console.log(data)
-
-const headers = ['name', 'stars']
-const tableData = labels.map((label, labelIndex) => [label, data.datasets[0].data[labelIndex]])
-
-type DataMessageProps = {}
-
-const DataMessage: FunctionComponent<DataMessageProps> = () => {
+const headers = ['标签', '值']
+const DataMessage: FunctionComponent<DataMessageProps> = (props) => {
   const optionList = ['chart', 'sheet']
   const [currentOption, setOption] = useState(optionList[0])
+  const chartData = {
+    labels: props.plot.labels,
+    datasets: [
+      {
+        label: props.plot.metric,
+        data: props.plot.data
+      }
+    ]
+  }
+  const tableData = props.plot.labels.map((label, labelIndex) => [
+    label,
+    props.plot.data[labelIndex]
+  ])
   return (
     <Message>
       <div className="px-4 pb-2 flex items-start gap-2">
@@ -94,7 +89,7 @@ const DataMessage: FunctionComponent<DataMessageProps> = () => {
           className={clsx({
             hidden: currentOption !== 'chart'
           })}>
-          <Bar options={options} data={data} />
+          <Bar options={options} data={chartData} />
         </div>
         <Table
           headers={headers}

@@ -26,7 +26,7 @@ function getMessageNodes(message: any[]) {
   })
 }
 
-function replaceTabs(resp: TabModel, get: Getter, set: Setter) {
+function replaceTabs(resp: TabModel, get: Getter, set: Setter, forwardToAI?: string) {
   // replace tabs
   set(
     tabAtom,
@@ -37,6 +37,18 @@ function replaceTabs(resp: TabModel, get: Getter, set: Setter) {
       return t
     })
   )
+  const lastThree = resp.messages.filter((m, i) => i >= resp.messages.length - 3)
+  const possibleLoop = lastThree.length > 2 && lastThree.every((m) => m.type !== 'user')
+  if (forwardToAI && !possibleLoop) {
+    set(rereplyTabAtom, {
+      type: 'bot',
+      props: {
+        pending: true,
+        subType: forwardToAI,
+        children: `${forwardToAI}正在处理....`
+      }
+    })
+  }
 }
 
 const persist = false
@@ -82,8 +94,8 @@ export const addTabAtom = atom(null, (get, set, update: string) => {
   set(loadingAtom, true)
 
   set(postTabAtom, [newUpdate])
-    .then((resp) => {
-      replaceTabs(resp, get, set)
+    .then(({ tab, forwardToAI }) => {
+      replaceTabs(tab, get, set, forwardToAI)
     })
     .finally(() => {
       set(loadingAtom, false)
@@ -91,34 +103,44 @@ export const addTabAtom = atom(null, (get, set, update: string) => {
 })
 
 const sendMsgAtom = jTrpc.tab.sendMsg.atomWithMutation()
-export const replyTabAtom = atom(null, (get, set, update: string) => {
-  const tabs = get(tabAtom)
-  const activeTabId = get(activeTabAtomId)
-  const activeTab = tabs.find((f) => activeTabId === f.id)
-  if (!activeTab) {
-    throw new Error('no tab found in current page')
-  }
+export const replyTabAtom = atom(
+  null,
+  (
+    get,
+    set,
+    update: {
+      type: string
+      props: any
+    }
+  ) => {
+    console.log('updating tab')
+    const tabs = get(tabAtom)
+    const activeTabId = get(activeTabAtomId)
+    const activeTab = tabs.find((f) => activeTabId === f.id)
+    if (!activeTab) {
+      throw new Error('no tab found in current page')
+    }
 
-  // optimistic update
-  const newTab: TabModel = {
-    ...activeTab,
-    messages: [
-      ...activeTab.messages,
-      createMessage('user', {
-        children: update
+    // optimistic update
+    const newTab: TabModel = {
+      ...activeTab,
+      messages: [...activeTab.messages, createMessage(update.type, update.props)]
+    }
+    replaceTabs(newTab, get, set)
+    set(loadingAtom, true)
+
+    set(sendMsgAtom, [newTab])
+      .then(({ tab, forwardToAI }) => {
+        replaceTabs(tab, get, set, forwardToAI)
       })
-    ]
+      .finally(() => {
+        set(loadingAtom, false)
+      })
   }
-  replaceTabs(newTab, get, set)
-  set(loadingAtom, true)
-
-  set(sendMsgAtom, [newTab])
-    .then((resp) => {
-      replaceTabs(resp, get, set)
-    })
-    .finally(() => {
-      set(loadingAtom, false)
-    })
+)
+// Workaround for loop set replyTabAtom :(
+const rereplyTabAtom = atom(null, (get, set, update: any) => {
+  set(replyTabAtom, update)
 })
 
 export const closeCurrentTabAtom = atom(null, (get, set, update: boolean) => {

@@ -2,6 +2,14 @@ export type MessageMode = {
   id: string
   type: string
   props: {
+    processedAI?: string
+    pending?: boolean
+    plot?: {
+      metric: string
+      data: number[]
+      labels: string[]
+    }
+    subType?: string
     children?: any
     data?: any
     raw?: string
@@ -60,7 +68,11 @@ export const testTab = {
       id: '2',
       type: 'data',
       props: {
-        raw: '[data]'
+        plot: {
+          metric: '标签分类数量分布',
+          data: [12, 14, 15, 18, 17],
+          labels: ['付款问题', '发货延迟', '取消退款问题', '换货问题', '产品质量问题']
+        }
       }
     },
     {

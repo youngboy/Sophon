@@ -78,7 +78,12 @@ const Reply: FunctionComponent<ReplyProps> = (props) => {
         value={msg}
         onValueChange={setMsg}
         onSubmit={() => {
-          reply(msg)
+          reply({
+            type: 'user',
+            props: {
+              children: msg
+            }
+          })
           setMsg('')
           blurInput()
         }}
