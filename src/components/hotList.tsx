@@ -54,7 +54,7 @@ const HotList: FunctionComponent<HotListProps> = (props) => {
           onClick={() => {
             setHot(item.quest)
           }}
-          className="scursor-pointer items-start w-full py-2 flex  gap-2"
+          className="cursor-pointer items-start w-full py-2 flex  gap-2"
           key={item.quest}>
           <Icon xlink="flame" className="w-4 h-[21px] text-red-400 " />
           <div className="hover:text-link text-sm leading-[1.5]">{item.quest}</div>
