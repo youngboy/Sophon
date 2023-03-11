@@ -63,6 +63,7 @@ const Reply: FunctionComponent<ReplyProps> = (props) => {
                   <Select.Label className="text-text-2 px-3 text-xs">结束咨询</Select.Label>
                   <hr className="mt-2 mb-2" />
                   <SelectItem value="good">不愧是你</SelectItem>
+                  <SelectItem value="soso">我只是路过</SelectItem>
                   <SelectItem value="bad">人工智障</SelectItem>
                 </Select.Group>
               </Select.Viewport>

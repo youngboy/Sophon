@@ -1,4 +1,4 @@
-import { MessageMode, TabModel } from '../routers/subRouters/tab.model'
+import { MessageMode } from '../routers/subRouters/tab.model'
 
 export function getHisChats(messages: MessageMode[]) {
   let role = 'Human'
@@ -44,9 +44,9 @@ export const docTemp = `\
 加强粉丝互动、助力用户连接，更加高效、 精准地实现流量转化。
 
 Human: 专业号认证有费用吗
-DocAI: 企业专业号需要支付600元审核服务费，个人专业号免费认证。
+DocAI: {"response": "企业专业号需要支付600元审核服务费，个人专业号免费认证。"}
 Human: 在哪里开通抖音的账号
-DocAI: 很抱歉，抖音App 不是我们的业务范围哦，你可以试试问小红书 App 个人号、企业号相关内容
+DocAI: {"response": "很抱歉，抖音App 不是我们的业务范围哦，你可以试试问小红书 App 个人号、企业号相关内容"}
 Human: 如何开通企业专业号
 
 现在新的任务来了

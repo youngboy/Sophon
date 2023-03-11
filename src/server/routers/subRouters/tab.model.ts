@@ -18,6 +18,7 @@ export type MessageMode = {
 export type TabModel = {
   title: string
   id: string
+  quest: string
   messages: MessageMode[]
 }
 
@@ -25,6 +26,7 @@ export function createTab(quest: string): TabModel {
   return {
     title: `标签`,
     id: `${Date.now()}`,
+    quest,
     messages: [
       createMessage('bot', {
         raw: quest,
@@ -49,6 +51,7 @@ export function createMessage(type: string, props: any) {
 
 export const testTab = {
   title: '标签 1',
+  quest: '过去一个星期的咨询会话里面，哪些是客服可以改进的',
   id: `${Date.now()}`,
   messages: [
     {

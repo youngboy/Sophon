@@ -13,6 +13,7 @@ function sleep(ms: number) {
 
 const zTab = z.object({
   id: z.string(),
+  quest: z.string(),
   title: z.string(),
   messages: z.array(z.any())
 })

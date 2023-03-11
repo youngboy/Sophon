@@ -12,9 +12,10 @@ export default function Tabs() {
   const tabs = useAtomValue(tabWithNodesAtom)
   const [activeTab, setTab] = useAtom(activeTabAtom)
   useEffect(() => {
-    setTab(tabs[0].id)
-  }, [])
-
+    if (!activeTab && tabs[0]) {
+      setTab(tabs[0].id)
+    }
+  }, [tabs, activeTab, setTab])
   if (tabs.length < 1) {
     return null
   }
@@ -33,7 +34,7 @@ export default function Tabs() {
             className={`py-2 px-3 rounded-t-md border border-b-0 flex items-center ${
               activeTab?.title === t.title ? ' bg-surface-2 border-surface-3' : 'border-transparent'
             }`}
-            value={t.title}>
+            value={t.id}>
             {t.title}
           </RTabs.Trigger>
         ))}

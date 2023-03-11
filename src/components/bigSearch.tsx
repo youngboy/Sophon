@@ -1,17 +1,17 @@
 'use client'
 
-import { useSetAtom } from 'jotai'
-import { FunctionComponent, useState } from 'react'
+import { useAtom, useSetAtom } from 'jotai'
+import { FunctionComponent } from 'react'
 import { blurInput, scrollToTabs } from '~/utils'
 import Input from './input'
-import { addTabAtom } from './stores/tab'
+import { addTabAtom, searchAtom } from './stores/tab'
 
 type BigSearchProps = {
   className?: string
 }
 
 const BigSearch: FunctionComponent<BigSearchProps> = () => {
-  const [quest, setQuest] = useState('')
+  const [quest, setQuest] = useAtom(searchAtom)
   const setAtom = useSetAtom(addTabAtom)
   return (
     <Input

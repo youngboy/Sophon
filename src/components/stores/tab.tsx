@@ -51,7 +51,7 @@ function replaceTabs(resp: TabModel, get: Getter, set: Setter, forwardToAI?: str
   }
 }
 
-const persist = false
+const persist = true
 const postTabAtom = jTrpc.tab.post.atomWithMutation()
 export const tabAtom = persist
   ? atomWithStorage<TabModel[]>('insight:tabs-session', [])
@@ -77,6 +77,17 @@ export const activeTabAtom = atom(
   }
 )
 export const loadingAtom = atom(false)
+export const searchAtom = atom('')
+export const setHotQuestAtom = atom(null, (get, set, update: string) => {
+  const tabs = get(tabAtom)
+  const existedTab = tabs.find((t) => t.quest === update)
+  if (existedTab?.id) {
+    set(activeTabAtomId, existedTab.id)
+    scrollToTabs()
+  } else {
+    set(searchAtom, update)
+  }
+})
 
 // I know! horrible hum ? without benefit from react-query & atomic at all
 // FIXME: let's fix later, time is rushing
@@ -113,7 +124,6 @@ export const replyTabAtom = atom(
       props: any
     }
   ) => {
-    console.log('updating tab')
     const tabs = get(tabAtom)
     const activeTabId = get(activeTabAtomId)
     const activeTab = tabs.find((f) => activeTabId === f.id)
