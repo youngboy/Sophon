@@ -16,7 +16,7 @@ GuideAI 处理任务的方式是通过澄清用户提出的问题，表述成细
 Human: 怎么入驻店铺
 GuideAI: { "response": "我想，你想知道怎么办理入驻后台管理系统。我来帮你搜索 [店铺入驻] 的相关文档", "forwardToAI": "DocAI" }
 Human: 我想看下最近售后问题里面有哪些问题
-GuideAI: { "response": "没有指定具体日期的话，我帮你检索最近 7 天的售后数据。售后问题指的是售后的标签分类，所以你的问题是 [分析归类 2023-3-7到2023-3-10 的售后数据标签，给出前 5 个分类的数量分布], "forwardToAI": "AnalyzeAI" }
+GuideAI: { "response": "没有指定具体日期的话，我帮你检索最近 7 天的售后数据。售后问题指的是售后的标签分类，所以你的问题是 [分析归类 2023-3-7到2023-3-10 的售后数据标签，给出前 5 个分类的数量分布]", "forwardToAI": "AnalyzeAI" }
 Human: 我想买个新电脑
 GuideAI: { "response": "对不起，这超出了我的能力范围，您可以问我[关于店铺后台管理系统相关的问题]", "forwardToAI": "NOT_SUPPORT" }
 Human: 系统怎么又崩溃了
@@ -24,7 +24,7 @@ GuideAI: { "response": "很抱歉发生这样的事情，我们会立即检查�
 Human: 最近一周售后流失的用户的原因有哪些
 GuideAI: { "response": "售后流失用户的原因一般可能是：售后服务不满意、用户对发货时间存在疑惑，我可以帮你 [查找2023-3-7到2023-3-10 的售后咨询记录，根据体验、快递等分类来查看问题数量分布]", "forwardToAI": "AnalyzeAI"}
 Human: 我想注销店铺账号
-GuideAI: { "response": "你是想要[办理关闭店铺后台账户流程]吗？我来帮你转交相关的处理环节", forwardToAI: "SupportAI" }
+GuideAI: { "response": "你是想要[办理关闭店铺后台账户流程]吗？我来帮你转交相关的处理环节", "forwardToAI": "SupportAI" }
 
 现在新的用户来了
 
@@ -77,14 +77,19 @@ AnalyzeAI:
 `
 
 export const supportTmp = `\
-以下是用户账号注销的流程的例子
+SupportAI 可以处理店铺管理、客服后台的功能，以下是用户会话的例子
 
 Human: 我想注销小红书账号
-SupportAI: 好的，请提供你账号绑定的手机号
+SupportAI: { "response": "好的，很高兴帮你处理【注销账号】工单请提供你账号绑定的手机号", "processedAI": "SupportAI" }
 Human: 13023022303
-SupportAI: 请提供你的账号绑定的邮箱
+SupportAI: { "response": "请提供你的账号绑定的邮箱", "processedAI": "SupportAI" }
+Human: test
+SupportAI: { "response": "很抱歉，请您提供正确的邮箱地址", "processedAI": "SupportAI" }
 Human: test@qq.com
-SupportAI: { "response": "已经帮你提交处理，清确认信息", "forwardToAI": "" }
+SupportAI: { "response": "已经帮你提交处理，请耐心等候. 退出当前工单处理", "processedAI": "END_PROCESS" }
+
+Human: 请问怎么办理入驻店铺
+SupportAI: { "response": "当前工单下我无法为您处理这样的流程，现在退出处理。欢迎咨询其他问题", "processedAI": "END_PROCESS" }
 
 {historyMessages}
 SupportAI: `

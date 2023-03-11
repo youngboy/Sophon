@@ -10,7 +10,7 @@ export const openai = new OpenAIApi(conf)
 
 export const completionOpt = {
   model: 'text-davinci-003',
-  temperature: 0.9,
+  temperature: 0.85,
   max_tokens: 1000,
   top_p: 1,
   frequency_penalty: 0.0,
@@ -20,16 +20,23 @@ export const completionOpt = {
 
 export const callComp = async (promptMsg: string) => {
   console.log('>>> prompt', promptMsg)
-  return '我没钱了，充点钱吧大哥'
+  // return '我没钱了，充点钱吧大哥'
   try {
     const resp = await openai.createCompletion({
       ...completionOpt,
       prompt: promptMsg
     })
     console.log('<<< message', resp.data)
-    return resp.data?.choices?.[0].text || '[ai:我没办法回答你, 可能是没钱了]'
-  } catch (e) {
-    console.error(e)
+    return (
+      resp.data?.choices?.[0].text ||
+      JSON.stringify({
+        response: '[ai:openAI 返回有点问题, 可能是没钱了]',
+        forwardToAI: 'NOT_SUPPORT',
+        processedAI: 'END_PROCESS'
+      })
+    )
+  } catch (e: any) {
+    console.error(e?.message || e)
     return '[ai:我好像出了点问题, 可能是没钱了]'
   }
 }
@@ -37,13 +44,16 @@ export const callComp = async (promptMsg: string) => {
 function getResponse(preRes: string) {
   try {
     const resp: {
+      plot: any
       response: string
       forwardToAI: string
+      processedAI: string
     } = JSON.parse(preRes)
-    if (resp.response) {
+    if (resp.response || resp.plot) {
       return {
         ...resp,
-        forwardToAI: (resp.forwardToAI === 'NOT_SUPPORT' ? '' : resp.forwardToAI) || ''
+        forwardToAI: (resp.forwardToAI === 'NOT_SUPPORT' ? '' : resp.forwardToAI) || '',
+        processedAI: (resp.processedAI === 'END_PROCESS' ? '' : resp.processedAI) || ''
       }
     }
   } catch (e) {
@@ -51,7 +61,8 @@ function getResponse(preRes: string) {
   }
   return {
     response: preRes,
-    forwardToAI: ''
+    forwardToAI: '',
+    processedAI: ''
   }
 }
 export const DocAI = async (tab: TabModel, lastMsg: any, replacePending: boolean) => {
@@ -81,7 +92,6 @@ export const SupportAI = async (tab: TabModel, lastMsg: any, replacePending: boo
   )
 
   const preRes = await callComp(prompt)
-  return { response: '好的，请提供你账号绑定的手机号' }
   return getResponse(preRes)
 }
 
@@ -93,15 +103,9 @@ export const GuideAI = async (tab: TabModel, lastMsg: any, replacePending: boole
         tab.messages.filter((m, index) => index !== 0 && index !== tab.messages.length - 1)
       )
     )
-    .replace('{quest}', lastMsg?.props?.raw || '你好')
+    .replace('{quest}', lastMsg?.props?.raw || lastMsg?.props?.children || '你好')
 
   const preRes = await callComp(prompt)
-  return getResponse(
-    JSON.stringify({
-      response: '你是想要[办理关闭店铺后台账户流程]吗？我来帮你转交相关的处理环节',
-      forwardToAI: 'SupportAI'
-    })
-  )
   return getResponse(preRes)
 }
 

@@ -48,14 +48,16 @@ export const tabRouter = router({
     await sleep(1200)
 
     const lastMsg = input.messages[input.messages.length - 1]
+    const botMsg = input.messages.filter((i) => i.type === 'bot')
+    const lastBotMsg = botMsg[botMsg.length - 1]
     let replacePending = false
-    let respondAI = lastMsg?.props?.processedAI || 'GuideAI'
+    let respondAI = lastBotMsg?.props?.processedAI || 'GuideAI'
     if (lastMsg?.props?.pending && lastMsg.props.subType) {
       replacePending = true
       respondAI = lastMsg.props.subType
     }
 
-    let msg = { plot: null, response: '内部错误', forwardToAI: '' }
+    let msg = { plot: null, response: '内部错误', forwardToAI: '', processedAI: '' }
     try {
       msg = await ResponseAI(input, lastMsg, respondAI, replacePending)
     } catch (e) {
@@ -66,6 +68,7 @@ export const tabRouter = router({
       subType: respondAI,
       children: msg.response,
       plot: msg.plot,
+      processedAI: msg.processedAI,
       raw: JSON.stringify(msg)
     })
     if (replacePending) {
